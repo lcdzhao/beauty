@@ -10,35 +10,36 @@ def get_request_url():
     request_url = request_url + "?access_token=" + token
     return request_url
 
-def get_img_base(filepath):
-    with open(filepath,'rb') as fp:
-        content = base64.b64encode(fp.read())
-        return content
 
 
-
-
-def get_gender_beauty_by_img_path(filePath):
+def get_gender_beauty_by_img_path(url):
     params = {
-        'image':get_img_base(filePath),
-        'image_type':'BASE64',
+        'image':url,
+        'image_type':'URL',
         'face_field':'age,beauty,gender'
     }
 
     res = requests.post(get_request_url(),data=params)
     result = res.text
     result = json.loads(result)
-    sex_and_beauty = {}
     error_code = result['error_code']
     if error_code == 222202:
         return None
     try:
-        sex_type = result['result']['face_list'][-1]['gender']['type']
-        beauty = result['result']['face_list'][-1]['beauty']
-        sex_and_beauty['sex'] = sex_type
-        sex_and_beauty['beauty'] = beauty
-        return sex_and_beauty
+# 数据形式为{'face_num': 1,
+# 'face_list': [{'face_token': '59ef0f1eec25475cfe4a9f9c8112db00',
+# 'location': {'left': 4182.09, 'top': 1865.79, 'width': 1121, 'height': 994, 'rotation': 177},
+# 'face_probability': 0.65,
+# 'angle': {'yaw': 57.11, 'pitch': 12.35, 'roll': -182.51},
+# 'age': 19,
+# 'beauty': 39.94,
+# gender': {'type': 'female', 'probability': 0.73}}]}
+
+        return result['result']
     except KeyError:
         return None
     except TypeError:
         return None
+
+
+#print(get_gender_beauty_by_img_path("D:/Entertainment Resources/Pictures/Wallpaper/1.jpg"))
