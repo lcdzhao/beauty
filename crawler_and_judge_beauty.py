@@ -16,7 +16,7 @@ DIR = "D:/face"
 #AUTHORIZATION = "oauth c3cef7c66a1843f8b3a9e6a1e3160e20"
 #以下皆无需改动
 #每次请求知乎的讨论列表长度，不建议设定太长，注意节操
-LIMIT = 10
+LIMIT = 20
 #这是话题『『颜值』（20013528）的话题
 SOURCE = "20013528"
 #爬虫假装下正常浏览器请求
@@ -96,16 +96,16 @@ def get_image_with_score(faces,image,author_name,question_title):
         else:
             continue
 
-        if score < 20:
-            image_path = image_path +'/小于20分'
-        elif score < 40:
-            image_path = image_path +"/20-40分"
-        elif score < 60:
-            image_path = image_path +"/40-60分"
-        elif score < 80:
-            image_path = image_path +"/60-80分"
+        if score < 10:
+            image_path = image_path +'/小于10分'
+        elif score < 30:
+            image_path = image_path +"/10-30分"
+        elif score < 50:
+            image_path = image_path +"/30-50分"
+        elif score < 70:
+            image_path = image_path +"/50-70分"
         else:
-            image_path = image_path +"/80以上"
+            image_path = image_path +"/70以上"
         filename = ("%d--" % score) + author_name + "--" + question_title + ("--%d" % seq) + ".jpg"
         filename = re.sub(r'(?u)[^-\w.]', '_', filename)
         # 注意文件名的处理，不同平台的非法字符不一样，这里只做了简单处理，特别是 author_name / question_title 中的内容
@@ -146,6 +146,9 @@ def init_face_detective():
 def init_env():
     if not os.path.exists(DIR):
         os.makedirs(DIR)
+
+
+
 init_env()
 face_detective = init_face_detective()
 url = BASE_URL % SOURCE + URL_QUERY
